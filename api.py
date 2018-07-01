@@ -14,6 +14,9 @@ def check(json):
         return "status must me 'alive' or 'dead'"
     if json["gender"] != "male" OR json["gender"] != "female":
         return "gender must me 'male' or 'female'"
+    if json["health"] + json["stamina"] + json["food"] + json["oxygen"] +\
+       json["weight"] + json["damage"] + json["speed"] > 450:
+        return "dinosaurs level can't be above 450"
     return None
 
 @app.route("/list", methods=["GET"])
