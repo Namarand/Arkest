@@ -15,7 +15,7 @@ def create_table(conn):
                         id INTEGER PRIMARY KEY,
                         race VARCHAR NOT NULL,
                         name VARCHAR NOT NULL,
-                        level SMALL INT NOT NULL CHECK (level > 0),
+                        level SMALL INT NOT NULL CHECK (level > 0 AND level <= 450),
                         owner VARCHAR NOT NULL,
                         tribe VARCHAR not null,
                         acquired VARCHAR not null,
@@ -37,3 +37,27 @@ def create_table(conn):
         conn.close()
     except Error as e:
         print(e)
+
+def add_dinosaur(conn, json):
+    race = json["race"]
+    name = json["name"]
+    level = json["level"]
+    owner = json["owner"]
+    tribe = json["tribe"]
+    acquired = json["acquired"]
+    effectiveness = json["effectiveness"]
+    status = json["status"]
+    gender = json["gender"]
+    health = json["health"]
+    stamina = json["stamina"]
+    oxygen = json["oxygen"]
+    food = json["food"]
+    weight = json["weight"]
+    damage = json["damage"]
+    speed = json["speed"]
+    query = conn.execute("insert into dinosaurs values(\
+        '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',\
+        '{11}','{12}','{13}','{14}','{15}','{16}')".format(race, name,\
+        owner, trive, acquired, effectiveness, status, gender, health,\
+        stamina, oxygen, food, weight, damage, speed))
+    conn.commit()
