@@ -7,6 +7,15 @@ from flask import *
 app = Flask(__name__)
 api = Api(app)
 
+def check(json):
+    if json["acquired"] != "tamed" OR json["acquired"] != "breeded":
+        return "acquired must me 'tamed' or 'breeded'"
+    if json["status"] != "alive" OR json["status"] != "dead":
+        return "status must me 'alive' or 'dead'"
+    if json["gender"] != "male" OR json["gender"] != "female":
+        return "gender must me 'male' or 'female'"
+    return None
+
 @app.route("/list", methods=["GET"])
 def list():
     conn = create_connection("dabase.db") # connect to database
@@ -15,30 +24,11 @@ def list():
 
 @app.route("/new", methods=["POST"])
 def new():
+    failure = check(request.json)
+    if failure is not None:
+        return jsonify({ "failure" : failure})
     conn = create_connection("dabase.db")
-    print(request.get_json())
-    race = request.json["race"]
-    name = request.json["name"]
-    level = request.json["level"]
-    owner = request.json["owner"]
-    tribe = request.json["tribe"]
-    acquired = request.json["acquired"]
-    effectiveness = request.json["effectiveness"]
-    status = request.json["status"]
-    gender = request.json["gender"]
-    health = request.json["health"]
-    stamina = request.json["stamina"]
-    oxygen = request.json["oxygen"]
-    food = request.json["food"]
-    weight = request.json["weight"]
-    damage = request.json["damage"]
-    speed = request.json["speed"]
-    query = conn.execute("insert into dinosaurs values(\
-        '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',\
-        '{11}','{12}','{13}','{14}','{15}','{16}')".format(race, name,\
-        owner, trive, acquired, effectiveness, status, gender, health,\
-        stamina, oxygen, food, weight, damage, speed))
-    conn.commit()
+    add_dinosaur(conn, request.json)
     query = conn.execute("SELECT last_insert_rowid()")
     return jsonify({ "id" : query.fetchall()})
 
