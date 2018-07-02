@@ -115,5 +115,23 @@ def update_dinosaur_stat(conn, ident, field, json):
     conn.commit()
 
 def remove_dinosaur(conn, ident):
-    query = conn.execute("delete from dinosaurs where id = {0}".format(ident))
+    query = conn.execute("delete from dinosaurs where id = {0};".format(ident))
     conn.commit()
+
+def add_parent(conn, ident, json):
+    father = json["father"]
+    mother = json["mother"]
+    conn.execute("insert into parents values('{0}', '{1}', {2});".format(ident,
+        father, mother))
+    conn.commit()
+
+def update_parent(conn, ident, json):
+    father = json["father"]
+    mother = json["mother"]
+    conn.execute(
+        "update parents set father = '{0}', mother = '{1}' where id = {2};"
+        .format(father, mother, ident))
+    conn.commit()
+
+def delete_parent(conn, ident):
+    conn.execute("delete from parents where id = {0};".format(ident))
