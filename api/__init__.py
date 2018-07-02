@@ -42,8 +42,7 @@ def new():
         query = conn.execute("SELECT last_insert_rowid()")
         return jsonify({ "id" : query.fetchall()})
     except sqlite3.IntegrityError as r:
-        return jsonify({ "error" : "invalid value".format(
-           request.json["value"], field)})
+        return jsonify({ "error" : "invalid value"})
     except Exception as r:
         print(r)
         return jsonify({ "error" : "internal error"})
@@ -83,6 +82,49 @@ def dinosaurs_remove(ident):
     conn = create_connection(database)
     remove_dinosaur(conn, ident)
     return jsonify({"result":"succesfully delete"})
+
+@app.route("/parents/create", methods=["POST"])
+def parents_create():
+    try:
+        if request.json is None:
+            return jsonify({ "error": "missing body"})
+        conn = create_connection(database)
+        add_parents(conn, request.json)
+        query = conn.execute("SELECT last_insert_rowid()")
+        return jsonify({ "id" : query.fetchall()})
+    except sqlite3.IntegrityError as r:
+        return jsonify({ "error" : "invalid value"})
+    except Exception as r:
+        print(r)
+        return jsonify({ "error" : "internal error"})
+
+
+@app.route("/parents/update/<ident>", methods=["POST"])
+def parents_update(ident):
+    try:
+        if request.json is None:
+            return jsonify({ "error": "missing body"})
+        conn = create_connection(database)
+        update_parents(conn, ident, request.json)
+        return jsonify({ "result" : "update succeed" })
+    except sqlite3.IntegrityError as r:
+        return jsonify({ "error" : "invalid value"})
+    except Exception as r:
+        print(r)
+        return jsonify({ "error" : "internal error"})
+
+@app.route("/parents/remove/<ident>", methods=["GET"])
+def parents_remove(ident):
+    conn = create_connection(database)
+    remove_parents(conn, ident)
+    return jsonify({"result":"succesfully delete"})
+
+@app.route("/parents/get/<ident>", methods=["GET"])
+def parents_get(ident):
+    conn = create_connection(database)
+    query = conn.execute("select * from parents where parents.id = '{0}'"
+        .format(ident))
+    return jsonify ({'dinosaurs': query.fetchall()})
 
 def run_api(db_name, port):
    database= db_name
