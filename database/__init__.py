@@ -70,3 +70,36 @@ def add_dinosaur(conn, json):
         owner, trive, acquired, effectiveness, status, gender, health,\
         stamina, oxygen, food, weight, damage, speed, level))
     conn.commit()
+
+def update_dinosaur(conn, ident, json):
+    race = json["race"]
+    name = json["name"]
+    owner = json["owner"]
+    tribe = json["tribe"]
+    acquired = json["acquired"]
+    effectiveness = json["effectiveness"]
+    status = json["status"]
+    gender = json["gender"]
+    health = json["health"]
+    stamina = json["stamina"]
+    oxygen = json["oxygen"]
+    food = json["food"]
+    weight = json["weight"]
+    damage = json["damage"]
+    speed = json["speed"]
+    level = json["level"]
+    query = conn.execute("update dinosaurs set\
+        race = '{0}', name = '{1}', owner = '{2}', tribe = '{3}',\
+        acquired = '{4}', effectiveness = '{5}', status = '{6}',\
+        gender = '{7}', health = '{8}', stamina = '{9}', oxygen = '{10}',\
+        food = '{11}', weight = '{12}', damage = '{13}', speed = '{14}',\
+        speed = '{15}', level = '{16}' where id = '{17}')".format(race, name,\
+        owner, trive, acquired, effectiveness, status, gender, health,\
+        stamina, oxygen, food, weight, damage, speed, level, ident))
+    conn.commit()
+
+def update_dinosaur_stat(conn, ident, field, json):
+    value = json["value"]
+    query = conn.execute("update dinosaurs set {0} = '{1}' where id = '{2}')"\
+        .format(field, value, ident))
+    conn.commit()
