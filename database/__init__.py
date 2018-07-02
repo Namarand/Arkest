@@ -30,8 +30,17 @@ def create_table(conn):
                         speed TINY INT NOT NULL,
                         level TINY INT NOT NULL CHECK (level <= 71)
                     );"""
+        parents = """CREATE TABLE IF NOT EXISTS parents (
+                          id INTEGER,
+                          father INTEGER,
+                          mother INTEGER,
+                          FOREIGN KEY(id) REFERENCES dinosaurs(id),
+                          FOREIGN KEY(father) REFERENCES dinosaurs(id),
+                          FOREIGN KEY(mother) REFERENCES dinosaurs(id)
+                     );"""
         c = conn.cursor()
         c.execute(table)
+        c.execute(parents)
         conn.commit()
         c.close()
         conn.close()
