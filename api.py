@@ -43,16 +43,22 @@ def dinosaurs_get_by_id(ident):
 
 @app.route("/new", methods=["POST"])
 def new():
-    failure = check(request.json)
-    if failure is not None:
-        return jsonify({ "failure" : failure})
     try:
+        failure = check(request.json)
+        if failure is not None:
+            return jsonify({ "failure" : failure})
+        if request.json is None:
+            return jsonify({ "error": "missing body"})
         conn = create_connection("dabase.db")
         add_dinosaur(conn, request.json)
         query = conn.execute("SELECT last_insert_rowid()")
         return jsonify({ "id" : query.fetchall()})
-    except sqlite3.error as r:
+    except sqlite3.IntegrityError as r:
+        return jsonify({ "error" : "invalid value".format(\
+           request.json["value"], field)})
+    except Exception as r:
         print(r)
+        return jsonify({ "error" : "internal error"})
 
 @app.route("/update/dinosaurs/full/<ident>", methods=["POST"])
 def dinosaurs_update(ident):
@@ -83,6 +89,12 @@ def dinosaurs_update_field(ident, field):
     except Exception as r:
         print(r)
         return jsonify({ "error" : "internal error"})
+
+@app.route("/delete/dinosaurs/<ident>", methods=["GET"])
+def dinosaurs_remove(ident):
+    conn = create_connection("dabase.db")
+    remove_dinosaur(conn, ident)
+    return jsonify({"result":"succesfully delete"})
 
 if __name__ == '__main__':
     conn = create_connection("dabase.db")
