@@ -9,6 +9,16 @@ def create_connection(db_file):
         print(e)
         return None
 
+def create_database(db_file):
+    try:
+        conn = sqlite3.connect(db_file)
+        create_table(conn)
+        conn.close()
+        return True
+    except Error as e:
+        print(e)
+        return False
+
 def create_table(conn):
     try:
         table = """CREATE TABLE IF NOT EXISTS dinosaurs (
@@ -43,7 +53,6 @@ def create_table(conn):
         c.execute(parents)
         conn.commit()
         c.close()
-        conn.close()
     except Error as e:
         print(e)
 
