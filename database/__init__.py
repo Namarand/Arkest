@@ -74,7 +74,7 @@ def add_dinosaur(conn, json):
     damage = json["damage"]
     speed = json["speed"]
     level = json["level"]
-    query = conn.execute("""insert into dinosaurs values(
+    conn.execute("""insert into dinosaurs values(
         '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',
         '{11}','{12}','{13}','{14}','{15}', '{16}');""".format(race, name,
         owner, trive, acquired, effectiveness, status, gender, health,
@@ -98,7 +98,7 @@ def update_dinosaur(conn, ident, json):
     damage = json["damage"]
     speed = json["speed"]
     level = json["level"]
-    query = conn.execute("""update dinosaurs set\
+    conn.execute("""update dinosaurs set\
         race = '{0}', name = '{1}', owner = '{2}', tribe = '{3}',
         acquired = '{4}', effectiveness = '{5}', status = '{6}',
         gender = '{7}', health = '{8}', stamina = '{9}', oxygen = '{10}',
@@ -110,12 +110,12 @@ def update_dinosaur(conn, ident, json):
 
 def update_dinosaur_stat(conn, ident, field, json):
     value = json["value"]
-    query = conn.execute("update dinosaurs set {0} = '{1}' where id = '{2}';"\
+    conn.execute("update dinosaurs set {0} = '{1}' where id = '{2}';"\
         .format(field, value, ident))
     conn.commit()
 
 def remove_dinosaur(conn, ident):
-    query = conn.execute("delete from dinosaurs where id = {0};".format(ident))
+    conn.execute("delete from dinosaurs where id = {0};".format(ident))
     conn.commit()
 
 def add_parent(conn, ident, json):
