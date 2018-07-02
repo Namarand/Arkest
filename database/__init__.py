@@ -27,7 +27,8 @@ def create_table(conn):
                         food TINY INT NOT NULL,
                         weight TINY INT NOT NULL,
                         damage TINY INT NOT NULL,
-                        speed TINY INT NOT NULL
+                        speed TINY INT NOT NULL,
+                        level TINY INT NOT NULL CHECK (level <= 71)
                     );"""
         c = conn.cursor()
         c.execute(table)
@@ -53,9 +54,10 @@ def add_dinosaur(conn, json):
     weight = json["weight"]
     damage = json["damage"]
     speed = json["speed"]
+    level = json["level"]
     query = conn.execute("insert into dinosaurs values(\
         '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',\
-        '{11}','{12}','{13}','{14}','{15}')".format(race, name,\
+        '{11}','{12}','{13}','{14}','{15}', '{16}')".format(race, name,\
         owner, trive, acquired, effectiveness, status, gender, health,\
-        stamina, oxygen, food, weight, damage, speed))
+        stamina, oxygen, food, weight, damage, speed, level))
     conn.commit()
