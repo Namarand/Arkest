@@ -8,18 +8,6 @@ app = Flask(__name__)
 api = Api(app)
 database = None
 
-def check(json):
-    if json["acquired"] != "tamed" or json["acquired"] != "breeded":
-        return "acquired must me 'tamed' or 'breeded'"
-    if json["status"] != "alive" or json["status"] != "dead":
-        return "status must me 'alive' or 'dead'"
-    if json["gender"] != "male" or json["gender"] != "female":
-        return "gender must me 'male' or 'female'"
-    if json["health"] + json["stamina"] + json["food"] + json["oxygen"] +\
-       json["weight"] + json["damage"] + json["speed"] > 450:
-        return "dinosaurs level can't be above 450"
-    return None
-
 @app.route("/list", methods=["GET"])
 def list():
     conn = create_connection(database) # connect to database
@@ -45,9 +33,6 @@ def dinosaurs_get_by_id(ident):
 @app.route("/new", methods=["POST"])
 def new():
     try:
-        failure = check(request.json)
-        if failure is not None:
-            return jsonify({ "failure" : failure})
         if request.json is None:
             return jsonify({ "error": "missing body"})
         conn = create_connection(database)
