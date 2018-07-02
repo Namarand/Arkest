@@ -74,10 +74,10 @@ def add_dinosaur(conn, json):
     damage = json["damage"]
     speed = json["speed"]
     level = json["level"]
-    query = conn.execute("insert into dinosaurs values(\
-        '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',\
-        '{11}','{12}','{13}','{14}','{15}', '{16}');".format(race, name,\
-        owner, trive, acquired, effectiveness, status, gender, health,\
+    query = conn.execute("""insert into dinosaurs values(
+        '{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}',
+        '{11}','{12}','{13}','{14}','{15}', '{16}');""".format(race, name,
+        owner, trive, acquired, effectiveness, status, gender, health,
         stamina, oxygen, food, weight, damage, speed, level))
     conn.commit()
 
@@ -98,13 +98,13 @@ def update_dinosaur(conn, ident, json):
     damage = json["damage"]
     speed = json["speed"]
     level = json["level"]
-    query = conn.execute("update dinosaurs set\
-        race = '{0}', name = '{1}', owner = '{2}', tribe = '{3}',\
-        acquired = '{4}', effectiveness = '{5}', status = '{6}',\
-        gender = '{7}', health = '{8}', stamina = '{9}', oxygen = '{10}',\
-        food = '{11}', weight = '{12}', damage = '{13}', speed = '{14}',\
-        speed = '{15}', level = '{16}' where id = '{17}';".format(race, name,\
-        owner, trive, acquired, effectiveness, status, gender, health,\
+    query = conn.execute("""update dinosaurs set\
+        race = '{0}', name = '{1}', owner = '{2}', tribe = '{3}',
+        acquired = '{4}', effectiveness = '{5}', status = '{6}',
+        gender = '{7}', health = '{8}', stamina = '{9}', oxygen = '{10}',
+        food = '{11}', weight = '{12}', damage = '{13}', speed = '{14}',
+        speed = '{15}', level = '{16}' where id = '{17}';""".format(race, name,
+        owner, trive, acquired, effectiveness, status, gender, health,
         stamina, oxygen, food, weight, damage, speed, level, ident))
     conn.commit()
 

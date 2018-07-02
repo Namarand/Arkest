@@ -17,13 +17,15 @@ def list():
 @app.route("/list/<kind>", methods=["GET"])
 def dinosaurs_get(kind):
     conn = create_connection(database)
-    query = conn.execute("select * from dinosaurs where dinosaurs.race = '{0}'".format(kind))
+    query = conn.execute("select * from dinosaurs where dinosaurs.race = '{0}'"
+        .format(kind))
     return jsonify ({'dinosaurs': query.fetchall()})
 
 @app.route("/dinosaurs/<ident>", methods=["GET"])
 def dinosaurs_get_by_id(ident):
     conn = create_connection(database)
-    query = conn.execute("select * from dinosaurs where dinosaurs.id = '{0}'".format(ident))
+    query = conn.execute("select * from dinosaurs where dinosaurs.id = '{0}'"
+        .format(ident))
     res = query.fetchone()
     if res is None:
         return jsonify({'failure': "no such id"})
@@ -40,7 +42,7 @@ def new():
         query = conn.execute("SELECT last_insert_rowid()")
         return jsonify({ "id" : query.fetchall()})
     except sqlite3.IntegrityError as r:
-        return jsonify({ "error" : "invalid value".format(\
+        return jsonify({ "error" : "invalid value".format(
            request.json["value"], field)})
     except Exception as r:
         print(r)
@@ -55,7 +57,7 @@ def dinosaurs_update(ident):
         update_dinosaur(conn, ident, request.json)
         return jsonify({ "result" : "update succeed" })
     except sqlite3.IntegrityError as r:
-        return jsonify({ "error" : "invalid value".format(\
+        return jsonify({ "error" : "invalid value".format(
            request.json["value"], field)})
     except Exception as r:
         print(r)
@@ -70,7 +72,7 @@ def dinosaurs_update_field(ident, field):
         update_dinosaur_stat(conn, ident, field, request.json)
         return jsonify({ "result" : "update succeed" })
     except sqlite3.IntegrityError as r:
-        return jsonify({ "error" : "{0} is not a valid value for {1}".format(\
+        return jsonify({ "error" : "{0} is not a valid value for {1}".format(
            request.json["value"], field)})
     except Exception as r:
         print(r)
