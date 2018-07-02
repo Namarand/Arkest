@@ -103,3 +103,7 @@ def update_dinosaur_stat(conn, ident, field, json):
     query = conn.execute("update dinosaurs set {0} = '{1}' where id = '{2}';"\
         .format(field, value, ident))
     conn.commit()
+
+def remove_dinosaur(conn, ident):
+    query = conn.execute("delete from dinosaurs where id = {0}".format(ident))
+    conn.commit()
