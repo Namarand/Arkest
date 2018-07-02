@@ -46,22 +46,43 @@ def new():
     failure = check(request.json)
     if failure is not None:
         return jsonify({ "failure" : failure})
-    conn = create_connection("dabase.db")
-    add_dinosaur(conn, request.json)
-    query = conn.execute("SELECT last_insert_rowid()")
-    return jsonify({ "id" : query.fetchall()})
+    try:
+        conn = create_connection("dabase.db")
+        add_dinosaur(conn, request.json)
+        query = conn.execute("SELECT last_insert_rowid()")
+        return jsonify({ "id" : query.fetchall()})
+    except sqlite3.error as r:
+        print(r)
 
 @app.route("/update/dinosaurs/full/<ident>", methods=["POST"])
 def dinosaurs_update(ident):
-    conn = create_connection("dabase.db")
-    update_dinosaur(conn, ident, request.json)
-    return jsonify({ "result" : "update succeed" })
+    try:
+        if request.json is None:
+            return jsonify({ "error": "missing body"})
+        conn = create_connection("dabase.db")
+        update_dinosaur(conn, ident, request.json)
+        return jsonify({ "result" : "update succeed" })
+    except sqlite3.IntegrityError as r:
+        return jsonify({ "error" : "invalid value".format(\
+           request.json["value"], field)})
+    except Exception as r:
+        print(r)
+        return jsonify({ "error" : "internal error"})
 
 @app.route("/update/dinosaurs/field/<ident>/<field>", methods=["POST"])
 def dinosaurs_update_field(ident, field):
-    conn = create_connection("dabase.db")
-    update_dinosaur_stat(conn, ident, field, request.json)
-    return jsonify({ "result" : "update succeed" })
+    try:
+        if request.json is None:
+            return jsonify({ "error": "missing body"})
+        conn = create_connection("dabase.db")
+        update_dinosaur_stat(conn, ident, field, request.json)
+        return jsonify({ "result" : "update succeed" })
+    except sqlite3.IntegrityError as r:
+        return jsonify({ "error" : "{0} is not a valid value for {1}".format(\
+           request.json["value"], field)})
+    except Exception as r:
+        print(r)
+        return jsonify({ "error" : "internal error"})
 
 if __name__ == '__main__':
     conn = create_connection("dabase.db")
