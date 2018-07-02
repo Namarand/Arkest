@@ -51,6 +51,18 @@ def new():
     query = conn.execute("SELECT last_insert_rowid()")
     return jsonify({ "id" : query.fetchall()})
 
+@app.route("/update/dinosaurs/full/<ident>", methods=["POST"])
+def dinosaurs_update(ident):
+    conn = create_connection("dabase.db")
+    update_dinosaur(conn, ident, request.json)
+    return jsonify({ "result" : "update succeed" })
+
+@app.route("/update/dinosaurs/field/<ident>/<field>", methods=["POST"])
+def dinosaurs_update_field(ident, field):
+    conn = create_connection("dabase.db")
+    update_dinosaur_stat(conn, ident, field, request.json)
+    return jsonify({ "result" : "update succeed" })
+
 if __name__ == '__main__':
     conn = create_connection("dabase.db")
     if conn is not None:
