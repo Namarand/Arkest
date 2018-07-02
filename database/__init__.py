@@ -27,10 +27,10 @@ def create_table(conn):
                         name VARCHAR NOT NULL,
                         owner VARCHAR NOT NULL,
                         tribe VARCHAR not null,
-                        acquired VARCHAR not null,
+                        acquired VARCHAR not null CHECK (acquired = "Tamed" OR acquired = "Breeded"),
                         effectiveness TINY INT CHECK (effectiveness >= 0 AND effectiveness <= 100),
-                        status VARCHAR NOT NULL,
-                        gender VARCHAR NOT NULL,
+                        status VARCHAR NOT NULL CHECK (status = "Alive" OR status = "Dead"),
+                        gender VARCHAR NOT NULL CHECK (gender = "Male" OR gender = "Female"),
                         health TINY INT NOT NULL,
                         stamina TINY INT NOT NULL,
                         oxygen TINY INT NOT NULL,
@@ -38,7 +38,8 @@ def create_table(conn):
                         weight TINY INT NOT NULL,
                         damage TINY INT NOT NULL,
                         speed TINY INT NOT NULL,
-                        level TINY INT NOT NULL CHECK (level <= 71)
+                        level TINY INT NOT NULL CHECK (level <= 71),
+                        CHECK (health + stamina + oxygen + food + weight + damage + speed + level + 1 <= 450)
                     );"""
         parents = """CREATE TABLE IF NOT EXISTS parents (
                           id INTEGER,
