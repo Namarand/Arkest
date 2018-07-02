@@ -1,6 +1,6 @@
-from optparse import OptionParser
-from database import create_database
 from api import run_api
+from database import create_database
+from optparse import OptionParser
 
 if __name__ == '__main__':
     parser = OptionParser()
