@@ -6,6 +6,7 @@ from flask import *
 
 app = Flask(__name__)
 api = Api(app)
+database = None
 
 def check(json):
     if json["acquired"] != "tamed" or json["acquired"] != "breeded":
@@ -21,19 +22,19 @@ def check(json):
 
 @app.route("/list", methods=["GET"])
 def list():
-    conn = create_connection("dabase.db") # connect to database
+    conn = create_connection(database) # connect to database
     query = conn.execute("select distinct race from dinosaurs")
     return jsonify({'races': [i[0] for i in query.fetchall()]})
 
 @app.route("/list/<kind>", methods=["GET"])
 def dinosaurs_get(kind):
-    conn = create_connection("dabase.db")
+    conn = create_connection(database)
     query = conn.execute("select * from dinosaurs where dinosaurs.race = '{0}'".format(kind))
     return jsonify ({'dinosaurs': query.fetchall()})
 
 @app.route("/dinosaurs/<ident>", methods=["GET"])
 def dinosaurs_get_by_id(ident):
-    conn = create_connection("dabase.db")
+    conn = create_connection(database)
     query = conn.execute("select * from dinosaurs where dinosaurs.id = '{0}'".format(ident))
     res = query.fetchone()
     if res is None:
@@ -49,7 +50,7 @@ def new():
             return jsonify({ "failure" : failure})
         if request.json is None:
             return jsonify({ "error": "missing body"})
-        conn = create_connection("dabase.db")
+        conn = create_connection(database)
         add_dinosaur(conn, request.json)
         query = conn.execute("SELECT last_insert_rowid()")
         return jsonify({ "id" : query.fetchall()})
@@ -65,7 +66,7 @@ def dinosaurs_update(ident):
     try:
         if request.json is None:
             return jsonify({ "error": "missing body"})
-        conn = create_connection("dabase.db")
+        conn = create_connection(database)
         update_dinosaur(conn, ident, request.json)
         return jsonify({ "result" : "update succeed" })
     except sqlite3.IntegrityError as r:
@@ -80,7 +81,7 @@ def dinosaurs_update_field(ident, field):
     try:
         if request.json is None:
             return jsonify({ "error": "missing body"})
-        conn = create_connection("dabase.db")
+        conn = create_connection(database)
         update_dinosaur_stat(conn, ident, field, request.json)
         return jsonify({ "result" : "update succeed" })
     except sqlite3.IntegrityError as r:
@@ -92,12 +93,10 @@ def dinosaurs_update_field(ident, field):
 
 @app.route("/delete/dinosaurs/<ident>", methods=["GET"])
 def dinosaurs_remove(ident):
-    conn = create_connection("dabase.db")
+    conn = create_connection(database)
     remove_dinosaur(conn, ident)
     return jsonify({"result":"succesfully delete"})
 
-if __name__ == '__main__':
-    conn = create_connection("dabase.db")
-    if conn is not None:
-        create_table(conn)
-        app.run(port='5002')
+def run_api(db_name, port):
+   database= db_name
+   app.run(port=port)
