@@ -78,7 +78,7 @@ API
         [
             {
                 "id": 5,
-                ...
+                "...": "..."
                 "speed": 5,
                 "level": 14
             },
@@ -97,10 +97,10 @@ API
 ```json
 {
     "race": "Sabertooth",
-    "name": "SuperSaber2"
+    "name": "SuperSaber2",
     "owner": "Namarand",
     "tribe": "My Awesome Tribe",
-    ...
+    "..." : "...",
     "speed": 5,
     "level": 14
 }
@@ -219,7 +219,7 @@ API
             },
             {
                 "id": 7,
-                "error: "no such dinosaur"
+                "error": "no such dinosaur"
             }
         ]
 }
