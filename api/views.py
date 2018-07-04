@@ -9,6 +9,8 @@ from api.serializers import DinosaurSerializer
 @csrf_exempt
 def dinosaurs_list(request):
     if request.method == 'GET':
-        dinosaurs = Dinosaur.objects.all()
-        serializer = DinosaurSerializer(dinosaurs, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        dinosaurs = Dinosaur.objects.values('race').distinct()
+        races = []
+        for i in dinosaurs:
+            races += [i['race']]
+        return JsonResponse({"count" : len(races), "races" : races}, safe=False)
