@@ -14,3 +14,10 @@ def races_list(request):
         for i in dinosaurs:
             races += [i['race']]
         return JsonResponse({"count" : len(races), "races" : races}, safe=False)
+
+@csrf_exempt
+def dinosaurs_list(request, kind):
+    if request.method == 'GET':
+        dinosaurs = Dinosaur.objects.all().filter(race=kind)
+        serializer = DinosaurSerializer(dinosaurs, many=True)
+        return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)
