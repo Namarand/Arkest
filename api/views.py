@@ -21,3 +21,23 @@ def dinosaurs_list(request, kind):
         dinosaurs = Dinosaur.objects.all().filter(race=kind)
         serializer = DinosaurSerializer(dinosaurs, many=True)
         return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)
+
+@csrf_exempt
+def dinosaurs_get(request):
+    if request.method == 'GET':
+        data = JSONParser().parse(request)
+        results = []
+        for i in data["ids"]:
+            req = Dinosaur.objects.filter(id=i)
+            if req.exists():
+                results += DinosaurSerializer(req.get()).data
+            else:
+                results += {"id": i, "error": "no such dinosaurs"}
+        return JsonResponse({"dinosaurs": results})
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = SnippetSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
