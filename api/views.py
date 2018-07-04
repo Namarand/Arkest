@@ -7,7 +7,7 @@ from api.models import Dinosaur
 from api.serializers import DinosaurSerializer
 
 @csrf_exempt
-def dinosaurs_list(request):
+def races_list(request):
     if request.method == 'GET':
         dinosaurs = Dinosaur.objects.values('race').distinct()
         races = []
