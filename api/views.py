@@ -41,3 +41,21 @@ def dinosaurs(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+
+@csrf_exempt
+def dinosaurs_by_id(request, identifier):
+    try:
+        dino = Dinosaur.objects.get(pk=identifier)
+    except Dinosaur.DoesNotExist:
+        return JsonResponse({"id": identifier, "error" : "no sush dinosaurs" }, status=400)
+    if request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = DinosaurSerializer(dino, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+    elif request.method == 'DELETE':
+        dino.delete()
+        return HttpResponse(status=204)
+
