@@ -23,7 +23,7 @@ def dinosaurs_list(request, kind):
         return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)
 
 @csrf_exempt
-def dinosaurs_get(request):
+def dinosaurs(request):
     if request.method == 'GET':
         data = JSONParser().parse(request)
         results = []
