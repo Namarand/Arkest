@@ -36,7 +36,7 @@ def dinosaurs(request):
         return JsonResponse({"dinosaurs": results})
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = SnippetSerializer(data=data)
+        serializer = DinosaurSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
