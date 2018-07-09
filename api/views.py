@@ -8,7 +8,7 @@ from api.models import Dinosaur
 from api.serializers import DinosaurSerializer
 
 class races_list(APIView):
-    def get(request):
+    def get(self, request):
         dinosaurs = Dinosaur.objects.values('race').distinct()
         races = []
         for i in dinosaurs:
@@ -16,7 +16,7 @@ class races_list(APIView):
         return JsonResponse({"count" : len(races), "races" : races}, safe=False)
 
 class dinosaurs_list(APIView):
-    def get(request, kind):
+    def get(self, request, kind):
         dinosaurs = Dinosaur.objects.all().filter(race=kind)
         serializer = DinosaurSerializer(dinosaurs, many=True)
         return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)

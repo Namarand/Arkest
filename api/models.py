@@ -51,4 +51,3 @@ class Dinosaur(models.Model):
 
     class Meta:
         ordering = ('race',)
-
