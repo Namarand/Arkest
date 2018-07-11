@@ -1,13 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.views import APIView
 from api.models import Dinosaur
 from api.serializers import DinosaurSerializer
+from api.permissions import IsApiUser, IsApiViewer
 
 class races_list(APIView):
+    permission_classes = (IsApiUser,
+                          IsApiViewer)
     def get(self, request):
         dinosaurs = Dinosaur.objects.values('race').distinct()
         races = []
@@ -16,12 +19,16 @@ class races_list(APIView):
         return JsonResponse({"count" : len(races), "races" : races}, safe=False)
 
 class dinosaurs_list(APIView):
+    permission_classes = (IsApiUser,
+                          IsApiViewer)
     def get(self, request, kind):
         dinosaurs = Dinosaur.objects.all().filter(race=kind)
         serializer = DinosaurSerializer(dinosaurs, many=True)
         return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)
 
 class dinosaurs(APIView):
+    permission_classes = (IsApiUser,
+                          IsApiViewer)
     def get(self, request):
         data = JSONParser().parse(request)
         results = []
@@ -41,6 +48,8 @@ class dinosaurs(APIView):
         return JsonResponse(serializer.errors, status=400)
 
 class dinosaurs_by_id(APIView):
+    permission_classes = (IsApiUser,
+                          IsApiViewer)
     def get_by_id(identifier):
         try:
             return Dinosaur.objects.get(pk=identifier)

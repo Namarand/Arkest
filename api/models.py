@@ -51,8 +51,3 @@ class Dinosaur(models.Model):
 
     class Meta:
         ordering = ('race',)
-        permissions = (
-            ('can_list_dinosaurs_race', 'Can list dinosaurs race'),
-            ('can_get_dinosaurs', 'Can get dinosaurs'),
-            ('can_list_dinosaurs', 'Can list dinosaurs race'),
-        )
