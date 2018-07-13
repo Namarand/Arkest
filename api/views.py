@@ -1,12 +1,16 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse, Http404
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from rest_framework.views import APIView
 from api.models import Dinosaur
-from api.serializers import DinosaurSerializer
 from api.permissions import IsApiUser, IsApiViewer
+from api.serializers import DinosaurSerializer
+from django.contrib.auth.models import Group, Permission
+from django.http import HttpResponse, JsonResponse, Http404
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+from rest_framework.views import APIView
+
+Group.objects.get_or_create(name="ApiUser")
+Group.objects.get_or_create(name="ApiViewer")
 
 class races_list(APIView):
     permission_classes = (IsApiUser,
