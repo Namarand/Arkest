@@ -26,6 +26,8 @@ class dinosaurs_list(APIView):
     permission_classes = (HasApiRight,)
     def get(self, request, kind):
         dinosaurs = Dinosaur.objects.all().filter(race=kind)
+        if len(dinosaurs) == 0:
+            raise Http404
         serializer = DinosaurSerializer(dinosaurs, many=True)
         return JsonResponse({"count" : len(dinosaurs), "dinosaurs": serializer.data}, safe=False)
 
