@@ -4,6 +4,37 @@ Arkest
 INSTALL
 -------
 
+### Setup
+    You need at least a python3.
+
+#### Optional
+    If you want to use this on your personal computer, you should
+    create a virtualenv to avoid instaling package that you'll use only for
+    this project. You can do as follow:
+
+```shell
+    virtualenv -p /PATH/TO/YOUR/python3 venv
+```
+    You can activate your environment by:
+
+```shell
+    . venv/bin/activate
+```
+
+### Dependancy
+    You can install dependency by typing the following command.
+
+```shell
+    pip3 install -r requirement.txt
+```
+
+### Launch the server
+    You can launch the server with the following command.
+
+```shell
+    python3 manage.py runserver
+```
+
 API
 ---
 
