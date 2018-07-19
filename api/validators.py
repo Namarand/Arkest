@@ -23,8 +23,8 @@ def validate_status(value):
                 )
 
 def validate_sexe(value):
-    if value != "Male" and value != "Female":
+    if value != "Male" and value != "Female" and value != "Undefined":
         raise ValidationError(
-                _('%(value)s must be "Male" or "Female"'),
+                _('%(value)s must be "Male" or "Female" or Undefined"'),
                 params={'value': value},
                 )
