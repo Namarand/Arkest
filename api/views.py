@@ -52,7 +52,7 @@ class dinosaurs_by_id(APIView):
     def get(self, request, identifier):
         return JsonResponse(DinosaurSerializer(self.get_by_id(identifier)).data)
 
-    def put(request, identifier):
+    def put(self, request, identifier):
         dino = self.get_by_id(identifier)
         data = JSONParser().parse(request)
         serializer = DinosaurSerializer(dino, data=data)
@@ -61,7 +61,7 @@ class dinosaurs_by_id(APIView):
             return JsonResponse(serializer.data)
         return JsonResponse(serializer.errors, status=400)
 
-    def delete(request, identifier):
+    def delete(self, request, identifier):
         dino = self.get_by_id(identifier)
         dino.delete()
         return HttpResponse(status=204)
