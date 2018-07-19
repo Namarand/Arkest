@@ -66,3 +66,37 @@ class dinosaurs_by_id(APIView):
         dino.delete()
         return HttpResponse(status=204)
 
+
+class parent(APIView):
+    permission_classes = (HasApiRight,)
+    
+    def get_by_id(self, identifier):
+        try:
+            return Parents.objects.get(pk=identifier)
+        except Dinosaur.DoesNotExist:
+            raise Http404
+
+    def get(self, request, identifier):
+        return JsonResponse(ParentsSerializer(self.get_by_id(identifier)).data)
+
+    def post(self, request, identifier):
+        data = JSONParser().parse(request)
+        serializer = ParentsSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
+
+    def put(self, request, identifier):
+        parents = self.get_by_id(identifier)
+        data = JSONParser().parse(request)
+        serializer = DinosaurSerializer(parents, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    def delete(self, request, identifier):
+        parents = self.get_by_id(identifier)
+        parents.delete()
+        return HttpResponse(status=204)
