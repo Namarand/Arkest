@@ -28,17 +28,3 @@ def validate_sexe(value):
                 _('%(value)s must be "Male" or "Female" or Undefined"'),
                 params={'value': value},
                 )
-
-def validate_father(value):
-    if Dinosaur.objects.get(pk=value).sexe != "Male":
-        raise ValidationError(
-                _('father must be a male'),
-                params={'value': value},
-                )
-
-def validate_mother(value):
-    if Dinosaur.objects.get(pk=value).sexe != "Female":
-        raise ValidationError(
-                _('mother must be a female'),
-                params={'value': value},
-                )
