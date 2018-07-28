@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.apps.ApiConfig',
     'parents.apps.ParentsConfig',
+    'stats.apps.StatsConfig',
 ]
 
 MIDDLEWARE = [
